@@ -1,19 +1,26 @@
-using CookComputing.XmlRpc;
-using XmlRpcMatrixClient;
+using Horizon.XmlRpc.Core;
 
-const string serverUrl = "http://localhost:5050/";
+namespace XmlRpcMatrixClient;
 
-try
+public static class Program
 {
-    int[][] matrix = MatrixInputHelper.ReadMatrixFromConsole();
-    MatrixProcessingResultDto result = MatrixRpcClient.ProcessMatrix(serverUrl, matrix);
-    MatrixOutputHelper.PrintResult(result);
-}
-catch (XmlRpcFaultException ex)
-{
-    Console.WriteLine($"XML-RPC Fault: {ex.FaultCode} - {ex.FaultString}");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"Ошибка: {ex.Message}");
+    public static void Main()
+    {
+        const string serverUrl = "http://127.0.0.1:5050/";
+
+        try
+        {
+            int[][] matrix = MatrixInputHelper.ReadSquareMatrix();
+            MatrixProcessingResultDto result = MatrixRpcClient.ProcessMatrix(serverUrl, matrix);
+            MatrixOutputHelper.PrintResult(result);
+        }
+        catch (XmlRpcFaultException ex)
+        {
+            Console.WriteLine($"XML-RPC Fault: {ex.FaultCode} - {ex.FaultString}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка: {ex.Message}");
+        }
+    }
 }
