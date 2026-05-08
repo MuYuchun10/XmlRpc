@@ -6,7 +6,7 @@
 
 ## Стек
 - .NET 8 (`net8.0`)
-- NuGet-библиотека: `Horizon.XmlRpc` версии `1.3.0`
+- NuGet-библиотека: `xmlrpcnet` версии `2.5.0` (пакет существует на NuGet и совместим с используемым API `CookComputing.XmlRpc`)
 
 ## Логика обработки
 Сервер получает квадратную целочисленную матрицу `n x n` и:
@@ -50,11 +50,3 @@
    ```bash
    dotnet run --project XmlRpcMatrixClient
    ```
-
-## Troubleshooting: ошибка `NU1101`
-Если restore не находит `Horizon.XmlRpc`, проверьте подключение NuGet-источника `nuget.org` и очистите кэш:
-```bash
-dotnet nuget list source
-dotnet nuget locals all --clear
-dotnet restore --no-cache
-```
