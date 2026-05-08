@@ -1,19 +1,20 @@
-using CookComputing.XmlRpc;
+using Horizon.XmlRpc.Core;
+using Horizon.XmlRpc.Server;
 
 namespace XmlRpcMatrixServer;
 
-public interface IMatrixRpcService : IXmlRpcProxy
+public interface IMatrixRpcContract
 {
     [XmlRpcMethod("processMatrix")]
     MatrixProcessingResult ProcessMatrix(int[][] matrix);
 }
 
-public class MatrixRpcService : XmlRpcListenerService
+public sealed class MatrixRpcService : XmlRpcListenerService, IMatrixRpcContract
 {
     [XmlRpcMethod("processMatrix")]
-    public MatrixProcessingResult ProcessMatrix(int[][]? matrix)
+    public MatrixProcessingResult ProcessMatrix(int[][] matrix)
     {
-        MatrixValidator.ValidateMatrix(matrix);
-        return MatrixProcessor.Process(matrix!);
+        MatrixValidator.EnsureValidSquare(matrix);
+        return MatrixProcessor.Process(matrix);
     }
 }

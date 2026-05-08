@@ -1,67 +1,36 @@
-# Лабораторная работа: XML-RPC клиент-сервер на C#/.NET
+# Лабораторная работа: XML-RPC клиент/сервер на Horizon.XmlRpc 2.5.2
 
-Проект содержит два консольных приложения:
-- `XmlRpcMatrixServer` — XML-RPC сервер с методом `processMatrix`;
-- `XmlRpcMatrixClient` — XML-RPC клиент для ввода матрицы и вывода результата.
+Проект полностью пересобран под пакет **Horizon.XmlRpc 2.5.2**:
+- `Horizon.XmlRpc.Server` для сервера;
+- `Horizon.XmlRpc.Client` для клиента.
 
-## Стек
-- .NET 8 (`net8.0`)
-- NuGet-библиотека: `XmlRpcCore` версии `1.3.0` (совместимый форк xmlrpcnet с пространством имён `CookComputing.XmlRpc`)
+## Проекты
+- `XmlRpcMatrixServer` — XML-RPC сервер с методом `processMatrix`.
+- `XmlRpcMatrixClient` — XML-RPC клиент, который запрашивает матрицу у пользователя и вызывает сервер.
 
-## Структура проекта
-### Сервер (`XmlRpcMatrixServer`)
-- `Program.cs` — запуск `HttpListener` и обработка XML-RPC запросов;
-- `MatrixRpcService.cs` — XML-RPC сервис и метод `processMatrix`;
-- `MatrixProcessor.cs` — бизнес-логика обработки матрицы;
-- `MatrixProcessingResult.cs` — DTO результата обработки;
-- `MatrixValidator.cs` — валидация входной матрицы.
-
-### Клиент (`XmlRpcMatrixClient`)
-- `Program.cs` — точка входа клиента;
-- `MatrixInputHelper.cs` — безопасный ввод квадратной матрицы;
-- `MatrixOutputHelper.cs` — форматированный вывод результата;
-- `MatrixRpcClient.cs` — XML-RPC прокси и вызов удалённой процедуры.
-
-## Логика обработки
-Сервер получает квадратную целочисленную матрицу `n x n` и:
-1. Находит минимум на главной диагонали (`matrix[i][i]`) и минимум на побочной (`matrix[i][n - 1 - i]`).
-2. Если `minMain <= minSecondary`, выбирает `Main`; иначе `Secondary`.
-   - При равенстве минимумов приоритет у `Main`.
-   - Если один и тот же минимальный элемент принадлежит обеим диагоналям (например, центральный элемент при нечётном `n`), приоритет также у `Main`.
-3. Обнуляет элементы выбранной диагонали.
-4. Возводит в квадрат элементы **ниже** выбранной диагонали:
-   - для `Main`: `i > j`;
-   - для `Secondary`: `i + j > n - 1`.
+## Как работает задача
+Сервер принимает квадратную матрицу `n x n` и:
+1. Ищет минимум на главной и побочной диагоналях.
+2. Выбирает диагональ с меньшим минимумом (при равенстве — `Main`).
+3. Обнуляет выбранную диагональ.
+4. Возводит в квадрат элементы ниже выбранной диагонали.
 
 Сервер возвращает:
 - исходную матрицу;
 - результирующую матрицу;
-- минимальный элемент выбранной диагонали;
-- выбранную диагональ (`Main` или `Secondary`).
-
-## Проверки
-### На клиенте
-- размер матрицы должен быть больше нуля;
-- в матрице разрешены только целые числа;
-- каждая строка должна содержать ровно `n` элементов.
-
-### На сервере
-- матрица не `null`;
-- матрица не пустая;
-- матрица квадратная;
-- при некорректных данных выбрасывается `XmlRpcFaultException`, и сервер возвращает корректный XML-RPC fault response.
+- минимум выбранной диагонали;
+- имя выбранной диагонали (`Main`/`Secondary`).
 
 ## Запуск
-1. Убедитесь, что установлен .NET SDK 8.0+.
-2. Восстановите пакеты:
-   ```bash
-   dotnet restore
-   ```
-3. Запустите сервер:
-   ```bash
-   dotnet run --project XmlRpcMatrixServer
-   ```
-4. В отдельном терминале запустите клиент:
-   ```bash
-   dotnet run --project XmlRpcMatrixClient
-   ```
+```bash
+dotnet restore
+dotnet run --project XmlRpcMatrixServer
+# в другом терминале
+dotnet run --project XmlRpcMatrixClient
+```
+
+## Примечание по Horizon.XmlRpc
+В этой версии используются пространства имён:
+- `Horizon.XmlRpc.Core` (`XmlRpcMethod`, `XmlRpcFaultException`, `IXmlRpcProxy`);
+- `Horizon.XmlRpc.Server` (`XmlRpcListenerService`);
+- `Horizon.XmlRpc.Client` (`XmlRpcProxyGen`).

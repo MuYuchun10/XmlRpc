@@ -1,4 +1,5 @@
-using CookComputing.XmlRpc;
+using Horizon.XmlRpc.Client;
+using Horizon.XmlRpc.Core;
 
 namespace XmlRpcMatrixClient;
 
@@ -10,21 +11,18 @@ public interface IMatrixRpcProxy : IXmlRpcProxy
 
 public static class MatrixRpcClient
 {
-    public static MatrixProcessingResultDto ProcessMatrix(string serverUrl, int[][] matrix)
+    public static MatrixProcessingResultDto ProcessMatrix(string endpointUrl, int[][] matrix)
     {
-        var proxy = XmlRpcProxyGen.Create<IMatrixRpcProxy>();
-        proxy.Url = serverUrl;
+        IMatrixRpcProxy proxy = XmlRpcProxyGen.Create<IMatrixRpcProxy>();
+        proxy.Url = endpointUrl;
         return proxy.ProcessMatrix(matrix);
     }
 }
 
-public class MatrixProcessingResultDto
+public sealed class MatrixProcessingResultDto
 {
     public int[][] OriginalMatrix { get; set; } = Array.Empty<int[]>();
-
     public int[][] ResultMatrix { get; set; } = Array.Empty<int[]>();
-
     public int MinimumElement { get; set; }
-
     public string SelectedDiagonal { get; set; } = "Main";
 }

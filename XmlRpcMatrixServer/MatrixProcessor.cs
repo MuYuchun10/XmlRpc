@@ -4,58 +4,60 @@ public static class MatrixProcessor
 {
     public static MatrixProcessingResult Process(int[][] matrix)
     {
-        int n = matrix.Length;
-        int[][] original = matrix.Select(row => row.ToArray()).ToArray();
+        int size = matrix.Length;
+        int[][] source = matrix.Select(row => row.ToArray()).ToArray();
         int[][] result = matrix.Select(row => row.ToArray()).ToArray();
 
         int mainMin = int.MaxValue;
         int secondaryMin = int.MaxValue;
 
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < size; i++)
         {
-            mainMin = Math.Min(mainMin, matrix[i][i]);
-            secondaryMin = Math.Min(secondaryMin, matrix[i][n - 1 - i]);
+            mainMin = Math.Min(mainMin, source[i][i]);
+            secondaryMin = Math.Min(secondaryMin, source[i][size - 1 - i]);
         }
 
-        bool useMain = mainMin <= secondaryMin;
-        string selected = useMain ? "Main" : "Secondary";
-        int minimum = useMain ? mainMin : secondaryMin;
+        bool mainSelected = mainMin <= secondaryMin;
 
-        for (int i = 0; i < n; i++)
+        for (int row = 0; row < size; row++)
         {
-            for (int j = 0; j < n; j++)
+            for (int col = 0; col < size; col++)
             {
-                if (useMain)
+                if (mainSelected)
                 {
-                    if (i == j)
+                    if (row == col)
                     {
-                        result[i][j] = 0;
+                        result[row][col] = 0;
+                        continue;
                     }
-                    else if (i > j)
+
+                    if (row > col)
                     {
-                        result[i][j] *= result[i][j];
+                        result[row][col] *= result[row][col];
                     }
+
+                    continue;
                 }
-                else
+
+                if (row + col == size - 1)
                 {
-                    if (i + j == n - 1)
-                    {
-                        result[i][j] = 0;
-                    }
-                    else if (i + j > n - 1)
-                    {
-                        result[i][j] *= result[i][j];
-                    }
+                    result[row][col] = 0;
+                    continue;
+                }
+
+                if (row + col > size - 1)
+                {
+                    result[row][col] *= result[row][col];
                 }
             }
         }
 
         return new MatrixProcessingResult
         {
-            OriginalMatrix = original,
+            OriginalMatrix = source,
             ResultMatrix = result,
-            MinimumElement = minimum,
-            SelectedDiagonal = selected,
+            MinimumElement = mainSelected ? mainMin : secondaryMin,
+            SelectedDiagonal = mainSelected ? "Main" : "Secondary"
         };
     }
 }

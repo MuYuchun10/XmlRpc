@@ -1,10 +1,10 @@
-using CookComputing.XmlRpc;
+using Horizon.XmlRpc.Core;
 
 namespace XmlRpcMatrixServer;
 
 public static class MatrixValidator
 {
-    public static void ValidateMatrix(int[][]? matrix)
+    public static void EnsureValidSquare(int[][]? matrix)
     {
         if (matrix is null)
         {
@@ -17,15 +17,14 @@ public static class MatrixValidator
         }
 
         int size = matrix.Length;
-
-        for (int i = 0; i < size; i++)
+        for (int row = 0; row < size; row++)
         {
-            if (matrix[i] is null)
+            if (matrix[row] is null)
             {
-                throw new XmlRpcFaultException(102, $"Row {i} is null.");
+                throw new XmlRpcFaultException(102, $"Row {row} is null.");
             }
 
-            if (matrix[i].Length != size)
+            if (matrix[row].Length != size)
             {
                 throw new XmlRpcFaultException(103, "Matrix must be square.");
             }
