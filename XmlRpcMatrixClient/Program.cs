@@ -1,3 +1,4 @@
+using System.Net;
 using Horizon.XmlRpc.Core;
 
 namespace XmlRpcMatrixClient;
@@ -17,6 +18,12 @@ public static class Program
         catch (XmlRpcFaultException ex)
         {
             Console.WriteLine($"XML-RPC Fault: {ex.FaultCode} - {ex.FaultString}");
+        }
+        catch (WebException ex)
+        {
+            Console.WriteLine("Не удалось подключиться к XML-RPC серверу.");
+            Console.WriteLine($"Проверьте, что сервер запущен по адресу {serverUrl} (проект XmlRpcMatrixServer).");
+            Console.WriteLine($"Детали: {ex.Message}");
         }
         catch (Exception ex)
         {
