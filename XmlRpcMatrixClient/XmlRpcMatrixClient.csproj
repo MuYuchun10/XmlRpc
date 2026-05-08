@@ -6,6 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="XmlRpcCore" Version="1.3.0" />
+    <PackageReference Include="Horizon.XmlRpc.Client" Version="2.5.2" />
   </ItemGroup>
 </Project>
