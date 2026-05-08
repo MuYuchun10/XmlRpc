@@ -11,7 +11,6 @@ public interface IMatrixRpcContract
 
 public sealed class MatrixRpcService : XmlRpcListenerService, IMatrixRpcContract
 {
-    [XmlRpcMethod("processMatrix")]
     public MatrixProcessingResult ProcessMatrix(int[][] matrix)
     {
         MatrixValidator.EnsureValidSquare(matrix);
