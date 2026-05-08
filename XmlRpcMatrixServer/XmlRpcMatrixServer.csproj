@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CookComputing.XmlRpcV2" Version="2.5.0" />
+    <PackageReference Include="XML-RPC.NET" Version="2.5.0" />
   </ItemGroup>
 </Project>
