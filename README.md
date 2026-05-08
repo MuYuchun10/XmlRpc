@@ -6,8 +6,7 @@
 
 ## Стек
 - .NET 8 (`net8.0`)
-- NuGet-библиотека: `CookComputing.XmlRpcV2` (XML-RPC.NET) версии `2.5.0`
-- NuGet-библиотека: `XML-RPC.NET` версии `2.5.0`
+- NuGet-библиотека: `Horizon.XmlRpc` версии `1.3.0`
 
 ## Логика обработки
 Сервер получает квадратную целочисленную матрицу `n x n` и:
@@ -52,24 +51,10 @@
    dotnet run --project XmlRpcMatrixClient
    ```
 
-## Troubleshooting: ошибка `NU1101` для `XML-RPC.NET`
-Если `dotnet restore` всё ещё ищет пакет `XML-RPC.NET`, значит у вас локально используется **старая версия проекта** (до исправления) или кэш/лок-файл со старой зависимостью.
-
-Проверьте, что в обоих `.csproj` указан именно пакет:
-```xml
-<PackageReference Include="CookComputing.XmlRpcV2" Version="2.5.0" />
-```
-
-Быстрая проверка из корня репозитория:
+## Troubleshooting: ошибка `NU1101`
+Если restore не находит `Horizon.XmlRpc`, проверьте подключение NuGet-источника `nuget.org` и очистите кэш:
 ```bash
-rg -n "XML-RPC.NET|CookComputing.XmlRpcV2|PackageReference" -S
-```
-
-Если где-то остался `XML-RPC.NET`, обновите `.csproj` и выполните:
-```bash
+dotnet nuget list source
 dotnet nuget locals all --clear
-dotnet clean
 dotnet restore --no-cache
 ```
-
-Если используете ZIP-архив проекта, скачайте/распакуйте актуальную версию ещё раз, чтобы точно не остались старые файлы.
